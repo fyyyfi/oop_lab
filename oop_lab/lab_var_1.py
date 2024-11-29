@@ -4,7 +4,8 @@ Generic: це клас для оголошення шаблонів типів (
 TypeVar: дозволяє створювати універсальні типи (наприклад, для списків, які можуть містити елементи різних типів).
 Callable: тип, що описує функцію або метод.
 Optional: означає, що значення може бути певного типу або None."""
-m abc import ABC, abstractmethod
+
+from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Callable, Optional
 
 T = TypeVar('T')  # Узагальнений тип для підтримки будь-яких даних
@@ -103,3 +104,4 @@ class CircularLinkedList(LinkedList[T]):
             new_node.next = self.head
         self.size += 1
 
+#Реалізація XORLinkedList
