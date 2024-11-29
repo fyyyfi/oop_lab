@@ -105,3 +105,72 @@ class CircularLinkedList(LinkedList[T]):
         self.size += 1
 
 #Реалізація XORLinkedList
+import ctypes
+
+class XORNode(Generic[T]):
+    def __init__(self, value: T):
+        self.value = value
+        self.both = 0  # XOR адрес попереднього і наступного вузлів
+
+
+class XORLinkedList(BaseList[T]):
+    def __init__(self):
+        self.head: Optional[XORNode[T]] = None
+        self.tail: Optional[XORNode[T]] = None
+        self.size = 0
+
+    def _xor(self, a: Optional[XORNode[T]], b: Optional[XORNode[T]]) -> int:
+        return (id(a) if a else 0) ^ (id(b) if b else 0)
+
+    def _get_node_by_id(self, node_id: int) -> Optional[XORNode[T]]:
+        return ctypes.cast(node_id, ctypes.py_object).value if node_id else None
+
+    def append(self, value: T) -> None:
+        new_node = XORNode(value)
+        if not self.head:
+            self.head = self.tail = new_node
+        else:
+            new_node.both = id(self.tail)
+            self.tail.both ^= id(new_node)
+            self.tail = new_node
+        self.size += 1
+
+    def find_by_index(self, index: int) -> Optional[T]:
+        if index < 0 or index >= self.size:
+            return None
+        prev_id = 0
+        current = self.head
+        for _ in range(index):
+            next_id = prev_id ^ current.both
+            prev_id = id(current)
+            current = self._get_node_by_id(next_id)
+        return current.value if current else None
+
+    def find_by_value(self, value: T) -> Optional[int]:
+        prev_id = 0
+        current = self.head
+        index = 0
+        while current:
+            if current.value == value:
+                return index
+            next_id = prev_id ^ current.both
+            prev_id = id(current)
+            current = self._get_node_by_id(next_id)
+            index += 1
+        return None
+
+
+#Реалізація VList
+
+class VList(BaseList[T]):
+    def __init__(self):
+        self.levels = [[]]
+        self.size = 0
+
+    def append(self, value: T) -> None:
+        if not self.levels[-1]:
+            self.levels[-1].append(value)
+        elif len(self.levels[-1]) == len(self.levels) * len(self.levels):
+            self.levels.append([])
+        self.levels[-1].append(value)
+        self.size += 1
