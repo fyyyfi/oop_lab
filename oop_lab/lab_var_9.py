@@ -3,7 +3,7 @@ import random
 import json
 from typing import List
 
-# Класи залишаються, але додається нова функціональність
+
 
 class Character:
     def __init__(self, name: str, role: str, age: int, gender: str):
