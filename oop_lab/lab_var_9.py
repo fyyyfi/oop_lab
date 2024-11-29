@@ -3,95 +3,62 @@ import random
 import json
 from typing import List
 
-# Базові класи
+# Класи залишаються, але додається нова функціональність
+
 class Character:
-    def __init__(self, name: str, role: str, age: int = 30, gender: str = "Unknown"):
-        self.__name = name
-        self.__role = role
-        self.__age = age
-        self.__gender = gender
+    def __init__(self, name: str, role: str, age: int, gender: str):
+        self.name = name
+        self.role = role
+        self.age = age
+        self.gender = gender
 
-    @property
-    def name(self):
-        return self.__name
-
-    @name.setter
-    def name(self, value):
-        self.__name = value
+    def __str__(self):
+        return f"{self.name} ({self.role}, {self.age} років, {self.gender})"
 
 
 class Protagonist(Character):
-    def __init__(self, name: str, role: str, motivation: str, age: int = 30, gender: str = "Unknown"):
+    def __init__(self, name: str, role: str, age: int, gender: str, motivation: str):
         super().__init__(name, role, age, gender)
-        self.__motivation = motivation
+        self.motivation = motivation
 
 
 class Antagonist(Character):
-    def __init__(self, name: str, role: str, conflict_reason: str, age: int = 30, gender: str = "Unknown"):
+    def __init__(self, name: str, role: str, age: int, gender: str, conflict_reason: str):
         super().__init__(name, role, age, gender)
-        self.__conflict_reason = conflict_reason
+        self.conflict_reason = conflict_reason
 
 
 class Location:
-    def __init__(self, name: str, description: str, climate: str = "Moderate"):
-        self.__name = name
-        self.__description = description
-        self.__climate = climate
-
-    @property
-    def name(self):
-        return self.__name
-
-    @property
-    def description(self):
-        return self.__description
+    def __init__(self, name: str, description: str):
+        self.name = name
+        self.description = description
 
 
 class UrbanLocation(Location):
-    def __init__(self, name: str, description: str, population: int, climate: str = "Moderate"):
-        super().__init__(name, description, climate)
-        self.__population = population
+    def __init__(self, name: str, description: str, population: int):
+        super().__init__(name, description)
+        self.population = population
 
 
 class RuralLocation(Location):
-    def __init__(self, name: str, description: str, agricultural_type: str, climate: str = "Moderate"):
-        super().__init__(name, description, climate)
-        self.__agricultural_type = agricultural_type
+    def __init__(self, name: str, description: str, agricultural_type: str):
+        super().__init__(name, description)
+        self.agricultural_type = agricultural_type
 
 
-# Класи подій
 class Event:
-    def __init__(self, title: str, location: Location, participants: List[Character], timestamp: datetime,
-                 is_alternative=False, importance_level=1):
-        self.__title = title
-        self.__location = location
-        self.__participants = participants
-        self.__timestamp = timestamp
-        self.__is_alternative = is_alternative
-        self.__importance_level = importance_level
-
-    @property
-    def title(self):
-        return self.__title
-
-    @property
-    def location(self):
-        return self.__location
-
-    @property
-    def participants(self):
-        return self.__participants
-
-    @property
-    def timestamp(self):
-        return self.__timestamp
+    def __init__(self, title: str, location: Location, participants: List[Character], timestamp: datetime):
+        self.title = title
+        self.location = location
+        self.participants = participants
+        self.timestamp = timestamp
 
     def execute(self):
         raise NotImplementedError("This method should be implemented in subclasses.")
 
     def __str__(self):
-        participants_names = ", ".join([p.name for p in self.__participants])
-        return f"{self.__timestamp}: {self.__title} at {self.__location.name} with {participants_names}"
+        participants_names = ", ".join([p.name for p in self.participants])
+        return f"{self.timestamp}: {self.title} at {self.location.name} with {participants_names}"
 
 
 class FightEvent(Event):
@@ -109,54 +76,37 @@ class MonologueEvent(Event):
         return f"{self.participants[0].name} розмірковує про своє життя."
 
 
-# Функції для перевірки й моделювання
-def check_character_availability(character: Character, events: List[Event], new_event_time: datetime):
+# Функції для перевірки реальності подій
+def check_event_reality(events: List[Event]) -> bool:
+    """
+    Перевіряє, чи персонажі не знаходяться в кількох місцях одночасно.
+    """
+    event_map = {}
     for event in events:
-        if character in event.participants and event.timestamp == new_event_time:
-            return False
+        for participant in event.participants:
+            if participant.name in event_map:
+                if event_map[participant.name] != event.timestamp:
+                    print(f"Помилка: {participant.name} одночасно знаходиться в різних місцях!")
+                    return False
+            else:
+                event_map[participant.name] = event.timestamp
     return True
 
 
-def validate_event_reality(event: Event, events: List[Event]):
-    for participant in event.participants:
-        if not check_character_availability(participant, events, event.timestamp):
-            return False
-    return True
-
-
-def generate_alternative_event(original_event: Event):
-    new_title = f"Alternative: {original_event.title}"
-    new_location = original_event.location
-    new_participants = original_event.participants[::-1]  # Інвертуємо список учасників
-    new_timestamp = original_event.timestamp + timedelta(days=1)
-    return Event(new_title, new_location, new_participants, new_timestamp, is_alternative=True)
-
-
-# Генерація випадкової події
-def generate_random_character():
-    roles = ["Protagonist", "Antagonist", "Side Character"]
-    name = f"Character_{random.randint(1, 100)}"
-    role = random.choice(roles)
-    return Character(name, role)
-
-
-def generate_random_event():
-    titles = ["Зустріч", "Бій", "Діалог", "Монолог"]
-    locations = [
-        Location("Бар", "Тихий, темний бар"),
-        Location("Підвал", "Місце для бійцівського клубу"),
-        Location("Квартира", "Місце проживання Розповідача"),
-    ]
-    title = random.choice(titles)
-    location = random.choice(locations)
-    participants = [generate_random_character(), generate_random_character()]
-    timestamp = datetime.now() - timedelta(days=random.randint(0, 30))
-    if title == "Бій":
-        return FightEvent(title, location, participants, timestamp)
-    elif title == "Діалог":
-        return DialogueEvent(title, location, participants, timestamp)
-    elif title == "Монолог":
-        return MonologueEvent(title, location, participants, timestamp)
+# Функція для моделювання альтернативних сценаріїв
+def generate_alternative_scenario(events: List[Event]):
+    new_events = []
+    for event in events:
+        altered_title = f"Altern: {event.title}"
+        altered_timestamp = event.timestamp + timedelta(hours=random.randint(1, 12))
+        new_event = Event(
+            title=altered_title,
+            location=event.location,
+            participants=event.participants,
+            timestamp=altered_timestamp,
+        )
+        new_events.append(new_event)
+    return new_events
 
 
 # Збереження і завантаження подій
@@ -170,18 +120,31 @@ def load_from_file(filename: str):
         return json.load(file)
 
 
-def generate_report(events: List[Event], start_date: datetime, end_date: datetime):
-    report = [
-        str(event)
-        for event in events
-        if start_date <= event.timestamp <= end_date
-    ]
+# Функція генерації звіту
+def generate_report(events: List[Event], start_date: datetime, end_date: datetime, filter_character=None):
+    report = []
+    for event in events:
+        if start_date <= event.timestamp <= end_date:
+            if not filter_character or any(p.name == filter_character for p in event.participants):
+                report.append(str(event))
     return report
 
 
-# Демонстрація роботи
-characters = [generate_random_character() for _ in range(5)]
-events = [generate_random_event() for _ in range(10)]
+# Демонстрація
+characters = [Character("Тайлер", "Антигерой", 30, "чоловік"), Character("Марла", "Партнер", 27, "жінка")]
+locations = [
+    Location("Бар", "Тихий, темний бар"),
+    Location("Підвал", "Місце для бійцівського клубу"),
+    Location("Квартира", "Місце проживання Розповідача"),
+]
+events = [
+    FightEvent("Бій", locations[1], [characters[0], characters[1]], datetime.now() - timedelta(days=5)),
+    DialogueEvent("Діалог", locations[0], [characters[0], characters[1]], datetime.now() - timedelta(days=10)),
+]
+
+# Перевірка правил реальності
+if check_event_reality(events):
+    print("Усі події відповідають правилам реальності.")
 
 # Збереження у файл
 event_data = [
@@ -198,12 +161,12 @@ save_to_file(event_data, "events.json")
 # Завантаження з файлу
 loaded_event_data = load_from_file("events.json")
 
-# Відновлення подій
+# Відновлення об'єктів подій із файлу
 loaded_events = [
     Event(
         title=e["title"],
         location=Location(e["location"], ""),
-        participants=[Character(name, "") for name in e["participants"]],
+        participants=[Character(name, "", 0, "") for name in e["participants"]],
         timestamp=datetime.fromisoformat(e["timestamp"]),
     )
     for e in loaded_event_data
@@ -212,7 +175,7 @@ loaded_events = [
 # Генерація звіту
 start_date = datetime.now() - timedelta(days=15)
 end_date = datetime.now()
-report = generate_report(loaded_events, start_date, end_date)
+report = generate_report(loaded_events, start_date, end_date, filter_character="Тайлер")
 
 print("\nЗвіт за останні 15 днів:")
 print("\n".join(report))
