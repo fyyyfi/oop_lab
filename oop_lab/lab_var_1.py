@@ -176,11 +176,27 @@ class VList(BaseList[T]):
         self.size += 1
 
 if __name__ == "__main__":
-    # Примітивний тип
-    linked_list = LinkedList[int]()
-    linked_list.append(10)
-    linked_list.append(20)
-    print(linked_list.find_by_value(10))  # Output: 0
+    # Примітивні типи
+    int_list = LinkedList[int]()
+    int_list.append(10)
+    int_list.append(20)
+    print("Find value 10 in int list:", int_list.find_by_value(10))  # Output: 0
+
+    float_list = LinkedList[float]()
+    float_list.append(10.5)
+    float_list.append(20.75)
+    print("Find value 20.75 in float list:", float_list.find_by_value(20.75))  # Output: 1
+
+    # Бібліотечні типи
+    str_list = LinkedList[str]()
+    str_list.append("apple")
+    str_list.append("banana")
+    print("Find value 'banana' in string list:", str_list.find_by_value("banana"))  # Output: 1
+
+    vector_list = LinkedList[list]()
+    vector_list.append([1, 2, 3])
+    vector_list.append([4, 5, 6])
+    print("Find value [4, 5, 6] in vector list:", vector_list.find_by_value([4, 5, 6]))  # Output: 1
 
     # Користувацький клас
     class CustomClass:
@@ -189,4 +205,4 @@ if __name__ == "__main__":
 
     custom_list = LinkedList[CustomClass]()
     custom_list.append(CustomClass("Example"))
-    print(custom_list.find_first_by_condition(lambda x: x.name == "Example").name)  # Output: Example
+    print("Find CustomClass with name 'Example':", custom_list.find_first_by_condition(lambda x: x.name == "Example").name)  # Output: Example
