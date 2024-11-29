@@ -174,3 +174,19 @@ class VList(BaseList[T]):
             self.levels.append([])
         self.levels[-1].append(value)
         self.size += 1
+
+if __name__ == "__main__":
+    # Примітивний тип
+    linked_list = LinkedList[int]()
+    linked_list.append(10)
+    linked_list.append(20)
+    print(linked_list.find_by_value(10))  # Output: 0
+
+    # Користувацький клас
+    class CustomClass:
+        def __init__(self, name: str):
+            self.name = name
+
+    custom_list = LinkedList[CustomClass]()
+    custom_list.append(CustomClass("Example"))
+    print(custom_list.find_first_by_condition(lambda x: x.name == "Example").name)  # Output: Example
