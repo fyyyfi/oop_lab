@@ -145,13 +145,15 @@ events = [
 if check_event_reality(events):
     print("Усі події відповідають правилам реальності.")
 
-# Збереження у файл
+# Оновлені дані для збереження
 event_data = [
     {
         "title": e.title,
         "location": e.location.name,
         "participants": [p.name for p in e.participants],
         "timestamp": e.timestamp.isoformat(),
+        "duration": e.duration,  # Додано нове поле
+        "type": e.event_type  # Додано нове поле
     }
     for e in events
 ]
