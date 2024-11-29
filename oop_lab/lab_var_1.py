@@ -3,15 +3,15 @@ typing: бібліотека, яка дозволяє працювати з ти
 Generic: це клас для оголошення шаблонів типів (generics).
 TypeVar: дозволяє створювати універсальні типи (наприклад, для списків, які можуть містити елементи різних типів).
 Callable: тип, що описує функцію або метод.
-Optional: означає, що значення може бути певного типу або None."""
+Optional: означає, що значення може бути певного типу  None."""
 
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Callable, Optional
 
-T = TypeVar('T')  # Узагальнений тип для підтримки будь-яких даних
+T = TypeVar('T') 
 
 class BaseList(ABC, Generic[T]):
-    """Абстрактний базовий клас для списків."""
+    
     
     @abstractmethod
     def append(self, value: T) -> None:
@@ -110,7 +110,7 @@ import ctypes
 class XORNode(Generic[T]):
     def __init__(self, value: T):
         self.value = value
-        self.both = 0  # XOR адрес попереднього і наступного вузлів
+        self.both = 0  
 
 
 class XORLinkedList(BaseList[T]):
@@ -160,7 +160,7 @@ class XORLinkedList(BaseList[T]):
         return None
 
 
-#Реалізація VList
+
 
 class VList(BaseList[T]):
     def __init__(self):
