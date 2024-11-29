@@ -31,3 +31,56 @@ class BaseList(ABC, Generic[T]):
         """Повертає розмір списку."""
         pass
 
+
+class Node(Generic[T]):
+    def __init__(self, value: T, next_node: Optional['Node[T]'] = None):
+        self.value = value
+        self.next = next_node
+
+
+class LinkedList(BaseList[T]):
+    def __init__(self):
+        self.head: Optional[Node[T]] = None
+        self.size = 0
+
+    def append(self, value: T) -> None:
+        new_node = Node(value)
+        if not self.head:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
+        self.size += 1
+
+    def find_by_value(self, value: T) -> Optional[int]:
+        current = self.head
+        index = 0
+        while current:
+            if current.value == value:
+                return index
+            current = current.next
+            index += 1
+        return None
+
+    def find_by_index(self, index: int) -> Optional[T]:
+        if index < 0 or index >= self.size:
+            return None
+        current = self.head
+        for _ in range(index):
+            current = current.next
+        return current.value if current else None
+
+    def find_first_by_condition(self, condition: Callable[[T], bool]) -> Optional[T]:
+        current = self.head
+        while current:
+            if condition(current.value):
+                return current.value
+            current = current.next
+        return None
+
+    def __len__(self) -> int:
+        return self.size
+
+
