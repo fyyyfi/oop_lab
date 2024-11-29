@@ -2,19 +2,17 @@
     {
         "title": "Бій",
         "location": "Підвал",
-        "participants": [
-            "Тайлер",
-            "Марла"
-        ],
-        "timestamp": "2024-11-24T14:49:35.715418"
+        "participants": ["Тайлер", "Розповідач"],
+        "timestamp": "2024-11-29T12:00:00",
+        "duration": 30,   
+        "type": "physical"  
     },
     {
         "title": "Діалог",
         "location": "Бар",
-        "participants": [
-            "Тайлер",
-            "Марла"
-        ],
-        "timestamp": "2024-11-19T14:49:35.715418"
+        "participants": ["Марла", "Тайлер"],
+        "timestamp": "2024-11-28T18:00:00",
+        "duration": 15,
+        "type": "verbal"
     }
 ]
