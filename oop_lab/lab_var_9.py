@@ -109,11 +109,10 @@ def generate_alternative_scenario(events: List[Event]):
     return new_events
 
 
-# Збереження і завантаження подій
+# Збереження і завантаження подій із файлу
 def save_to_file(data, filename: str):
     with open(filename, "w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
-
 
 def load_from_file(filename: str):
     with open(filename, "r", encoding="utf-8") as file:
