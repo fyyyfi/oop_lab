@@ -1,4 +1,10 @@
-from abc import ABC, abstractmethod
+"""abc: це стандартна бібліотека Python для створення абстрактних класів. ABC — це базовий клас для абстрактних класів, а abstractmethod використовується для визначення абстрактних методів, які мають бути реалізовані в підкласах.
+typing: бібліотека, яка дозволяє працювати з типами в Python, особливо для підтримки типізації та generics.
+Generic: це клас для оголошення шаблонів типів (generics).
+TypeVar: дозволяє створювати універсальні типи (наприклад, для списків, які можуть містити елементи різних типів).
+Callable: тип, що описує функцію або метод.
+Optional: означає, що значення може бути певного типу або None."""
+m abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Callable, Optional
 
 T = TypeVar('T')  # Узагальнений тип для підтримки будь-яких даних
@@ -83,4 +89,17 @@ class LinkedList(BaseList[T]):
     def __len__(self) -> int:
         return self.size
 
+class CircularLinkedList(LinkedList[T]):
+    def append(self, value: T) -> None:
+        new_node = Node(value)
+        if not self.head:
+            self.head = new_node
+            new_node.next = self.head
+        else:
+            current = self.head
+            while current.next != self.head:
+                current = current.next
+            current.next = new_node
+            new_node.next = self.head
+        self.size += 1
 
