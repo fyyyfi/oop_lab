@@ -3,7 +3,7 @@ typing: бібліотека, яка дозволяє працювати з ти
 Generic: це клас для оголошення шаблонів типів (generics).
 TypeVar: дозволяє створювати універсальні типи (наприклад, для списків, які можуть містити елементи різних типів).
 Callable: тип, що описує функцію або метод.
-Optional: означає, що значення може бути певного типу  None."""
+Optional: означає, що значення може бути певного типу або None."""
 
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Callable, Optional
