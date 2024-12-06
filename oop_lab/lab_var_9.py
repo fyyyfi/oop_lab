@@ -40,10 +40,6 @@ class UrbanLocation(Location):
         self.population = population
 
 
-class RuralLocation(Location):
-    def __init__(self, name: str, description: str, agricultural_type: str):
-        super().__init__(name, description)
-        self.agricultural_type = agricultural_type
 
 
 class Event:
